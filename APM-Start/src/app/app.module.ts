@@ -15,6 +15,8 @@ import { ProductModule } from './products/product.module';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './messages/message.module';
 
+import { RouterModule } from '@angular/router';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -22,7 +24,12 @@ import { MessageModule } from './messages/message.module';
     InMemoryWebApiModule.forRoot(ProductData, { delay: 1000 }),
     ProductModule,
     UserModule,
-    MessageModule
+    MessageModule,
+    RouterModule.forRoot([
+      {path:'welcome', component:WelcomeComponent},
+      {path:'',redirectTo:'welcome',pathMatch:'full'},
+      {path:'**', component:PageNotFoundComponent}
+    ])
   ],
   declarations: [
     AppComponent,
