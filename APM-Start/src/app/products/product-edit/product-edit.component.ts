@@ -1,23 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { MessageService } from '../../messages/message.service';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
-
+import {ActivatedRoute,Router} from '@angular/router';
 @Component({
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent {
+export class ProductEditComponent implements OnInit{
   pageTitle = 'Product Edit';
   errorMessage: string;
 
   product: Product;
 
-  constructor(private productService: ProductService,
+  constructor(private productService: ProductService, private route:ActivatedRoute,private router:Router,
               private messageService: MessageService) { }
 
+ngOnInit(){
+this.route.paramMap.subscribe(params =>  this.getProduct(+params.get('id')) );
+ 
+}
   getProduct(id: number): void {
     this.productService.getProduct(id).subscribe({
       next: product => this.onProductRetrieved(product),
@@ -69,6 +73,7 @@ export class ProductEditComponent {
     } else {
       this.errorMessage = 'Please correct the validation errors.';
     }
+
   }
 
   onSaveComplete(message?: string): void {
@@ -77,5 +82,6 @@ export class ProductEditComponent {
     }
 
     // Navigate back to the product list
+    this.router.navigate(['/products']);
   }
 }
