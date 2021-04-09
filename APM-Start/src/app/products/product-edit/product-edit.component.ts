@@ -13,8 +13,24 @@ export class ProductEditComponent implements OnInit{
   pageTitle = 'Product Edit';
   errorMessage: string;
 
-  product: Product;
   private dataIsValid: { [key: string]: boolean } = {};
+
+  private currentProduct: Product;
+  private originalProduct: Product;
+
+  //checks whether product data was changes so to activate candeactivate guard
+  get isDirty(): boolean {
+    return JSON.stringify(this.originalProduct) !== JSON.stringify(this.currentProduct);// for this to work object properties should defined in same order
+  }
+
+  get product(): Product {
+    return this.currentProduct;
+  }
+  set product(value: Product) {
+    this.currentProduct = value;
+    // Clone the object to retain a copy
+    this.originalProduct = value ? { ...value } : null;
+  }
 
   constructor(private productService: ProductService, private route:ActivatedRoute,private router:Router,
               private messageService: MessageService) { }
@@ -88,7 +104,7 @@ this.route.data.subscribe(data => {
     if (message) {
       this.messageService.addMessage(message);
     }
-
+    this.reset();
     // Navigate back to the product list
     this.router.navigate(['/products']);
   }
@@ -125,4 +141,11 @@ this.route.data.subscribe(data => {
       this.dataIsValid['tags'] = false;
     }
   }
+
+  reset(): void {
+    this.dataIsValid = null;
+    this.currentProduct = null;
+    this.originalProduct = null;
+  }
+
 }
