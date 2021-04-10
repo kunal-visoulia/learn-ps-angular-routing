@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router,CanLoad, Route, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs';
 import {AuthService} from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanLoad {
 
   constructor(private authService:AuthService, private router:Router){}
 
@@ -17,9 +17,9 @@ export class AuthGuard implements CanActivate {
 
   // Use the segments to build the full route
   // when using canLoad
-  // canLoad(route: Route, segments: UrlSegment[]): boolean {
-  //   return this.checkLoggedIn(segments.join('/'));
-  // }
+  canLoad(route: Route, segments: UrlSegment[]): boolean {
+    return this.checkLoggedIn(segments.join('/'));
+  }
 
   checkLoggedIn(url: string): boolean {
     if (this.authService.isLoggedIn) {
